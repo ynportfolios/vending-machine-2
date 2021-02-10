@@ -11,7 +11,7 @@ class VendingMachine
     @slot_money = 0
     # 飲料を格納する配列
     @beverages = []
-    # 初期状態で、コーラ（値段:120円、名前”コーラ”）を5本格納
+    # 初期状態で、コーラ（値段:120円、名前”コーラ”）を5本格納している。
     @beverages << Beverage.new('naef4g', 'コーラ', 120, 5)
   end
 
@@ -40,7 +40,7 @@ class VendingMachine
     @slot_money = 0
   end
 
-  # 格納している飲料の情報を出力する。
+  # 格納されているジュースの情報（値段と名前と在庫）を取得できる。
   def beverages_infomation
     puts 'ID｜商品名｜価格｜在庫数'
     @beverages.each do |beverage|
