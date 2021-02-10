@@ -1,3 +1,5 @@
+require './beverage'
+
 class VendingMachine
   # ステップ０　お金の投入と払い戻しの例コード
   # ステップ１　扱えないお金の例コード
@@ -7,6 +9,10 @@ class VendingMachine
   def initialize
     # 最初の自動販売機に入っている金額は0円
     @slot_money = 0
+    # 飲料を格納する配列
+    @beverages = []
+    # 初期状態で、コーラ（値段:120円、名前”コーラ”）を5本格納
+    @beverages << Beverage.new('naef4g', 'コーラ', 120, 5)
   end
 
   # 投入金額の総計を取得できる。
@@ -32,5 +38,13 @@ class VendingMachine
     puts @slot_money
     # 自動販売機に入っているお金を0円に戻す
     @slot_money = 0
+  end
+
+  # 格納している飲料の情報を出力する。
+  def beverages_infomation
+    puts 'ID｜商品名｜価格｜在庫数'
+    @beverages.each do |beverage|
+      puts "#{beverage.id}｜#{beverage.name}｜#{beverage.price}｜#{beverage.count}"
+    end
   end
 end
