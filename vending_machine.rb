@@ -7,12 +7,20 @@ class VendingMachine
   MONEY = [10, 50, 100, 500, 1000].freeze
   # （自動販売機に投入された金額をインスタンス変数の @slot_money に代入する）
   def initialize
-    # 最初の自動販売機に入っている金額は0円
+    # 最初の自動販売機に入っている売上金額は0円
+    @earn_money = 0
+    # 最初の自動販売機に入っている投入金額は0円
     @slot_money = 0
     # 飲料を格納する配列
     @beverages = []
     # 初期状態で、コーラ（値段:120円、名前”コーラ”）を5本格納している。
-    @beverages << Beverage.new('naef4g', 'コーラ', 120, 5)
+    @beverages << Beverage.new(0, 'コーラ', 120, 5)
+  end
+
+  # 現在の売上金額を取得できる。
+  def current_earn_money
+    # 自動販売機に入っている売上を表示する
+    @earn_money
   end
 
   # 投入金額の総計を取得できる。
@@ -33,6 +41,7 @@ class VendingMachine
   end
 
   # 払い戻し操作を行うと、投入金額の総計を釣り銭として出力する。
+  # 払い戻し操作では現在の投入金額からジュース購入金額を引いた釣り銭を出力する。
   def return_money
     # 返すお金の金額を表示する
     puts @slot_money
@@ -46,5 +55,30 @@ class VendingMachine
     @beverages.each do |beverage|
       puts "#{beverage.id}｜#{beverage.name}｜#{beverage.price}｜#{beverage.count}"
     end
+  end
+
+  # 投入金額、在庫の点で、コーラが購入できるかどうかを取得できる。
+  # ジュース値段以上の投入金額が投入されている条件下で購入操作を行うと、ジュースの在庫を減らし、売り上げ金額を増やす。
+  # 投入金額が足りない場合もしくは在庫がない場合、購入操作を行っても何もしない。
+  def buy_beverage
+    # 購入できる飲料のIDを格納する配列
+    beverage_ids = []
+    puts 'ID｜商品名｜価格｜購入可否'
+    @beverages.each do |beverage|
+      print "#{beverage.id}｜#{beverage.name}｜#{beverage.price}"
+      if (beverage.price < @slot_money) && beverage.count.positive?
+        beverage_ids << beverage.id
+        puts '｜購入できます'
+      else
+        puts '｜購入できません'
+      end
+    end
+    puts 'IDを入力してください'
+    beverage_id = gets.to_i
+    return false unless beverage_ids.include?(beverage_id)
+
+    @beverages[beverage_id].count = @beverages[beverage_id].count - 1
+    @earn_money += @beverages[beverage_id].price
+    @slot_money -= @beverages[beverage_id].price
   end
 end

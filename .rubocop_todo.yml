@@ -1,0 +1,6 @@
+Metrics/MethodLength:
+  CountComments: false
+  Max: 17
+
+Metrics/AbcSize:
+  Max: 28
