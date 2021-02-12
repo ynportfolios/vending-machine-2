@@ -31,7 +31,9 @@ class VendingMachine
 
   # 10円玉、50円玉、100円玉、500円玉、1000円札を１つずつ投入できる。
   # 投入は複数回できる。
-  def slot_money(money)
+  def slot_money
+    puts '金額を入力してください（｜10｜50｜100｜500｜1000｜のみ使用できます）'
+    money = gets.to_i
     # 想定外のもの（１円玉や５円玉。千円札以外のお札、そもそもお金じゃないもの（数字以外のもの）など）
     # が投入された場合は、投入金額に加算せず、それをそのまま釣り銭としてユーザに出力する。
     return false unless MONEY.include?(money)
@@ -68,7 +70,7 @@ class VendingMachine
     puts 'ID｜商品名｜価格｜購入可否'
     @beverages.each do |beverage|
       print "#{beverage.id}｜#{beverage.name}｜#{beverage.price}"
-      if (beverage.price < @slot_money) && beverage.count.positive?
+      if (beverage.price <= @slot_money) && beverage.count.positive?
         beverage_ids << beverage.id
         puts '｜購入できます'
       else
@@ -86,7 +88,13 @@ class VendingMachine
   end
 
   # ジュースを3種類管理できるようにする。
-  def slot_beverage(name, price, count)
+  def slot_beverage
+    puts '商品名を入力してください'
+    name = gets.chomp
+    puts '価格を入力してください'
+    price = gets.to_i
+    puts '個数を入力してください'
+    count = gets.to_i
     @beverages << Beverage.new(@beverages.last.id + 1, name, price, count)
   end
 end
