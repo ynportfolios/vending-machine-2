@@ -60,6 +60,8 @@ class VendingMachine
   # 投入金額、在庫の点で、コーラが購入できるかどうかを取得できる。
   # ジュース値段以上の投入金額が投入されている条件下で購入操作を行うと、ジュースの在庫を減らし、売り上げ金額を増やす。
   # 投入金額が足りない場合もしくは在庫がない場合、購入操作を行っても何もしない。
+  # 投入金額、在庫の点で購入可能なドリンクのリストを取得できる。
+  # ジュース値段以上の投入金額が投入されている条件下で購入操作を行うと、釣り銭（投入金額とジュース値段の差分）を出力する。
   def buy_beverage
     # 購入できる飲料のIDを格納する配列
     beverage_ids = []
@@ -80,5 +82,11 @@ class VendingMachine
     @beverages[beverage_id].count = @beverages[beverage_id].count - 1
     @earn_money += @beverages[beverage_id].price
     @slot_money -= @beverages[beverage_id].price
+    puts @slot_money
+  end
+
+  # ジュースを3種類管理できるようにする。
+  def slot_beverage(name, price, count)
+    @beverages << Beverage.new(@beverages.last.id + 1, name, price, count)
   end
 end
