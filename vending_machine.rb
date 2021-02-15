@@ -29,8 +29,6 @@ class VendingMachine
     @slot_money
   end
 
-  aaaaa
-
   # 10円玉、50円玉、100円玉、500円玉、1000円札を１つずつ投入できる。
   # 投入は複数回できる。
   def slot_money
