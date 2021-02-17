@@ -1,4 +1,5 @@
 require './beverage'
+require './line'
 
 class VendingMachine
   # ステップ０　お金の投入と払い戻しの例コード
@@ -13,8 +14,9 @@ class VendingMachine
     @slot_money = 0
     # 飲料を格納する配列
     @beverages = []
+    beverage = Beverage.new('コーラ', 120)
     # 初期状態で、コーラ（値段:120円、名前”コーラ”）を5本格納している。
-    @beverages << Beverage.new(0, 'コーラ', 120, 5)
+    @beverages << Line.new(0, beverage, 5)
   end
 
   # 現在の売上金額を取得できる。
@@ -54,8 +56,8 @@ class VendingMachine
   # 格納されているジュースの情報（値段と名前と在庫）を取得できる。
   def beverages_infomation
     puts 'ID｜商品名｜価格｜在庫数'
-    @beverages.each do |beverage|
-      puts "#{beverage.id}｜#{beverage.name}｜#{beverage.price}｜#{beverage.count}"
+    @beverages.each do |line|
+      puts "#{line.id}｜#{line.beverage.name}｜#{line.beverage.price}｜#{line.count}"
     end
   end
 
@@ -68,10 +70,10 @@ class VendingMachine
     # 購入できる飲料のIDを格納する配列
     beverage_ids = []
     puts 'ID｜商品名｜価格｜購入可否'
-    @beverages.each do |beverage|
-      print "#{beverage.id}｜#{beverage.name}｜#{beverage.price}"
-      if (beverage.price <= @slot_money) && beverage.count.positive?
-        beverage_ids << beverage.id
+    @beverages.each do |line|
+      print "#{line.id}｜#{line.beverage.name}｜#{line.beverage.price}"
+      if (line.beverage.price <= @slot_money) && line.count.positive?
+        beverage_ids << line.id
         puts '｜購入できます'
       else
         puts '｜購入できません'
@@ -82,8 +84,8 @@ class VendingMachine
     return false unless beverage_ids.include?(beverage_id)
 
     @beverages[beverage_id].count = @beverages[beverage_id].count - 1
-    @earn_money += @beverages[beverage_id].price
-    @slot_money -= @beverages[beverage_id].price
+    @earn_money += @beverages[beverage_id].beverage.price
+    @slot_money -= @beverages[beverage_id].beverage.price
     puts @slot_money
   end
 
@@ -95,6 +97,7 @@ class VendingMachine
     price = gets.to_i
     puts '個数を入力してください'
     count = gets.to_i
-    @beverages << Beverage.new(@beverages.last.id + 1, name, price, count)
+    beverage = Beverage.new(name, price)
+    @beverages << Line.new(@beverages.last.id + 1, beverage, count)
   end
 end
