@@ -56,9 +56,7 @@ class VendingMachine
   # 格納されているジュースの情報（値段と名前と在庫）を取得できる。
   def beverages_infomation
     puts 'ID｜商品名｜価格｜在庫数'
-    @beverages.each do |line|
-      puts "#{line.id}｜#{line.beverage.name}｜#{line.beverage.price}｜#{line.count}"
-    end
+    @beverages.map(&:display_line_information)
   end
 
   # 投入金額、在庫の点で、コーラが購入できるかどうかを取得できる。
@@ -83,7 +81,7 @@ class VendingMachine
     beverage_id = gets.to_i
     return false unless beverage_ids.include?(beverage_id)
 
-    @beverages[beverage_id].count = @beverages[beverage_id].count - 1
+    @beverages[beverage_id].count = @beverages[beverage_id].decrease_count
     @earn_money += @beverages[beverage_id].beverage.price
     @slot_money -= @beverages[beverage_id].beverage.price
     puts @slot_money
