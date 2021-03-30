@@ -13,10 +13,7 @@ class VendingMachine
     # 最初の自動販売機に入っている投入金額は0円
     @slot_money = 0
     # 飲料を格納する配列
-    @beverages = []
-    beverage = Beverage.new('コーラ', 120)
-    # 初期状態で、コーラ（値段:120円、名前”コーラ”）を5本格納している。
-    @beverages << Line.new(0, beverage, 5)
+    @stock = Stock.new
   end
 
   # 現在の売上金額を取得できる。
@@ -65,26 +62,34 @@ class VendingMachine
   # 投入金額、在庫の点で購入可能なドリンクのリストを取得できる。
   # ジュース値段以上の投入金額が投入されている条件下で購入操作を行うと、釣り銭（投入金額とジュース値段の差分）を出力する。
   def buy_beverage
-    # 購入できる飲料のIDを格納する配列
-    beverage_ids = []
+    display_bevarages
+
+    puts 'IDを入力してください'
+    line_id = gets.to_i
+    # return false unless beverage_ids.include?(beverage_id)
+    if @stock.buy(line_id)
+      line = @stock.get_line(line_id)
+      @earn_money += line.price
+      @slot_money -= line.price
+      puts @slot_money
+    else
+      puts '購入できませんでした'
+    end
+
+    # @beverages[beverage_id].decrease_count
+  end
+
+  def display_bevarages
     puts 'ID｜商品名｜価格｜購入可否'
     @beverages.each do |line|
       print "#{line.id}｜#{line.beverage.name}｜#{line.beverage.price}"
       if (line.beverage.price <= @slot_money) && line.count.positive?
-        beverage_ids << line.id
+        # beverage_ids << line.id
         puts '｜購入できます'
       else
         puts '｜購入できません'
       end
     end
-    puts 'IDを入力してください'
-    beverage_id = gets.to_i
-    return false unless beverage_ids.include?(beverage_id)
-
-    @beverages[beverage_id].count = @beverages[beverage_id].decrease_count
-    @earn_money += @beverages[beverage_id].beverage.price
-    @slot_money -= @beverages[beverage_id].beverage.price
-    puts @slot_money
   end
 
   # ジュースを3種類管理できるようにする。
@@ -96,6 +101,6 @@ class VendingMachine
     puts '個数を入力してください'
     count = gets.to_i
     beverage = Beverage.new(name, price)
-    @beverages << Line.new(@beverages.last.id + 1, beverage, count)
+    @stock.add_line(beverage, count)
   end
 end
