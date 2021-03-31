@@ -1,6 +1,5 @@
 class Line
-  attr_reader :id, :beverage
-  attr_accessor :count
+  attr_reader :id, :beverage, :count
 
   def initialize(id, beverage, count)
     # ID
@@ -16,6 +15,14 @@ class Line
   end
 
   def decrease_count
-    @count - 1
+    @count -= 1
+  end
+
+  def price
+    @beverage.price
+  end
+
+  def buyable?(money)
+    (self.beverage.price <= money) && self.count.positive?
   end
 end
